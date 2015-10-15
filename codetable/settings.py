@@ -56,7 +56,7 @@ ROOT_URLCONF = 'codetable.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR+'code_editor/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
