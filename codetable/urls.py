@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from code_editor.views import IndexView
+from code_editor.views import IndexView, CodeView, CodeEditor
 
 urlpatterns = [
 	url(r'^$', IndexView.as_view(), name='home'),
-	# url(r'^code$', Code.as_view(), name='code'),
+	url(r'^code/(?P<code_id>.*)/$', CodeEditor.as_view(), name='code_editor'),
+	url(r'^code$', CodeView.as_view(), name='code'),
     url(r'^admin/', include(admin.site.urls)),
 ]
