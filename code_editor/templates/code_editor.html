@@ -10,47 +10,80 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<style type="text/css" media="screen">
 		#editor { 
+			margin-top: 20px;
+			height: 50%;
 			position: absolute;
-			top: 8%;
-			right: 0%;
-			bottom: 50%;
-			left: 0;
 		}
 	</style>
 </head>
 <body>
-  <nav>
-    <div class="nav-wrapper black">
-      <a href="#!" class="brand-logo">CodeTable</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#"><i class="material-icons">search</i></a></li>
-        <li><a href="#"><i class="material-icons">view_module</i></a></li>
-        <li><a href="#"><i class="material-icons">refresh</i></a></li>
-        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
-      </ul>
-    </div>
-  </nav>
-  <div class="container">
-	  <div class="row">
-			<div id="editor">{{ code_obj.code }}</div>
-			<br>
-	  </div>
-  </div>
+	<nav>
+		<div class="nav-wrapper black">
+			<a href="#!" class="brand-logo">CodeTable</a>
+			<ul class="right hide-on-med-and-down">
+				<li><a href="#"><i class="material-icons">search</i></a></li>
+				<li><a href="#"><i class="material-icons">view_module</i></a></li>
+				<li><a href="#"><i class="material-icons">refresh</i></a></li>
+				<li><a href="#"><i class="material-icons">more_vert</i></a></li>
+			</ul>
+		</div>
+	</nav>
+	<br>
+	<div class="container b">
+		<div class="row">
+			<div class="col s9 left">
+				<a class="waves-effect waves-light btn black" id="language"><i class="material-icons left">cloud</i>Choose Language</a>
+			</div>
+			<div class="col s3 right">
+				<a class="waves-effect waves-light btn right blue" id="submit-btn"><i class="material-icons left">cloud</i>Save</a>
+			</div>
+			<div class="col s12">
+				<div id="editor" class="container">{{ code_obj.code }}</div>
+			</div>
+		</div>
+	</div>
+	{% csrf_token %}
 	{% load staticfiles %}
+	
 	<script src="{% static "js/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 	<script>
 		var editor = ace.edit("editor");
 		editor.setTheme("ace/theme/monokai");
 		editor.getSession().setMode("ace/mode/python");
+		editor.getSession().on('change', function(e) {
+			var current_code = editor.getValue();
+			var language = "PY";
+			$.ajax({
+				url: "/code/{{ code_obj.id }}/",
+				method: "post",
+				data: {code: current_code, lang : language, csrfmiddlewaretoken : csrftoken},
+				error: function(xhr, error){
+					console.debug(xhr); console.debug(error);
+			},
+			}).done(function(result) {
+				console.log(result);
+			});	
+		});
+	</script>
+
+	<script>
+	var csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	console.log(csrftoken);
+		$('#submit-btn').click(function (){
+			var current_code = editor.getValue();
+			var language = "PY";
+			$.ajax({
+				url: "/code/{{ code_obj.id }}/",
+				method: "post",
+				data: {code: current_code, lang : language, csrfmiddlewaretoken : csrftoken},
+				error: function(xhr, error){
+					console.debug(xhr); console.debug(error);
+			},
+			}).done(function(result) {
+				console.log(result);
+			});
+		});
+
 	</script>
 </body>
 </html>
-			<div class="input-field col s12">
-				<select>
-					<option value="" disabled selected>Choose your Language</option>
-					<option value="1">Python</option>
-					<option value="2">C++</option>
-					<option value="3">Option 3</option>
-				</select>
-				<label>Materialize Select</label>
-			</div>
