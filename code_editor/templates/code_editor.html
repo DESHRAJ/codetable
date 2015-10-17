@@ -31,11 +31,25 @@
 	<br>
 	<div class="container b">
 		<div class="row">
-			<div class="col s9 left">
-				<a class="waves-effect waves-light btn black" id="language"><i class="material-icons left">cloud</i>Choose Language</a>
+			<div class="col s4 ">
+				<div class="input-field col s12 browser-default">
+					<select id="lang">
+						{% for lang in languages %}
+							{% if lang == "{{ code_obj.lang }}" %}
+								<option value="{{lang}}" selected>{{ lang }}</option>
+							{% else %}
+								<option value="{{lang}}">{{ lang }}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+					<label>Select Language</label>
+				</div>
 			</div>
-			<div class="col s3 right">
+			<div class="col s4 ">
 				<a class="waves-effect waves-light btn right blue" id="submit-btn"><i class="material-icons left">cloud</i>Save</a>
+			</div>
+			<div class="col s4 ">
+				<a class="waves-effect waves-light btn right blue" id="compile-btn"><i class="material-icons left">cloud</i>Compile and Run</a>
 			</div>
 			<div class="col s12">
 				<div id="editor" class="container">{{ code_obj.code }}</div>
@@ -52,9 +66,9 @@
 		editor.getSession().setMode("ace/mode/python");
 		editor.getSession().on('change', function(e) {
 			var current_code = editor.getValue();
-			var language = "PY";
+			var language = document.getElementById('lang').value;;
 			$.ajax({
-				url: "/code/{{ code_obj.id }}/",
+				url: "/savecode/{{ code_obj.id }}/",
 				method: "post",
 				data: {code: current_code, lang : language, csrfmiddlewaretoken : csrftoken},
 				error: function(xhr, error){
@@ -69,9 +83,29 @@
 	<script>
 	var csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 	console.log(csrftoken);
+		// For saving the code in the database table
 		$('#submit-btn').click(function (){
 			var current_code = editor.getValue();
-			var language = "PY";
+			var language = document.getElementById('lang').value;;
+			$.ajax({
+				url: "/savecode/{{ code_obj.id }}/",
+				method: "post",
+				data: {code: current_code, lang : language, csrfmiddlewaretoken : csrftoken},
+				error: function(xhr, error){
+					console.debug(xhr); console.debug(error);
+			},
+			}).done(function(result) {
+				console.log(result);
+			});
+		});
+	</script>
+	<script>
+		var csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+		console.log("Hello world");
+		$('#compile-btn').click(function (){
+			// To submit the code to compile and run
+			var current_code = editor.getValue();
+			var language = document.getElementById('lang').value;;
 			$.ajax({
 				url: "/code/{{ code_obj.id }}/",
 				method: "post",
@@ -84,6 +118,9 @@
 			});
 		});
 
+		$(document).ready(function() {
+			$('select').material_select();
+		});
 	</script>
 </body>
 </html>
