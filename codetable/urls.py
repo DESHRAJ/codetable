@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.conf.urls.static import static
-from code_editor.views import IndexView, CodeView, CodeEditor
+from code_editor.views import IndexView, CodeView, CodeEditor, SaveCurrentCode
 
 urlpatterns = [
 	url(r'^$', IndexView.as_view(), name='home'),
 	url(r'^code/(?P<code_id>.*)/$', CodeEditor.as_view(), name='code_editor'),
+	url(r'^savecode/(?P<code_id>.*)/$', SaveCurrentCode.as_view(), name='save_code'),
 	url(r'^code$', CodeView.as_view(), name='code'),
 	url(r'^admin/', include(admin.site.urls)),
 ]

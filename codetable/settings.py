@@ -105,3 +105,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
 )
+
+HE_CLIENT_ID = "sample_string.api.hackerearth.com"
+
+HE_CLIENT_SECRET = "random_string"
