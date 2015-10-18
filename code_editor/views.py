@@ -18,16 +18,24 @@ COMPILE_URL = 'https://api.hackerearth.com/v3/code/compile/'
 RUN_URL = 'https://api.hackerearth.com/v3/code/run/'
 
 class IndexView(TemplateView):
+	"""
+	Base View
+	"""
 	template_name = "index.html"
 
 class CodeView(View):
+	"""
+	For creating the new workspace/codespace
+	"""
 	def get(self, request):
 		code_obj = CodeSubmission.objects.create()
 		code_obj.save()
 		return HttpResponseRedirect('/code/%s' %(code_obj.id))
 
 class CodeEditor(View):
-
+	"""
+	For compiling and running code using HACKEREARTH APIs
+	"""
 	def get(self, request, code_id=None):
 		template_name = 'code_editor.html'
 		code_obj = get_object_or_404(CodeSubmission, pk=code_id)
@@ -65,6 +73,9 @@ class CodeEditor(View):
 		# Return the response after making the API call 
 
 class SaveCurrentCode(View):
+	"""
+	For saving the code written on the go
+	"""
 	def post(self, request, code_id = None):
 		"""
 		Method to save the code instantly as there is some change in the code.
