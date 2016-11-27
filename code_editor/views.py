@@ -6,11 +6,11 @@ from random import randint
 
 from code_editor.models import CodeSubmission
 from codetable.settings import HE_CLIENT_SECRET
-from languages import LANGUAGES
+from .languages import LANGUAGES
 
 import json
 import urllib
-import StringIO
+from io import StringIO
 import gzip
 
 # Create your views here.
